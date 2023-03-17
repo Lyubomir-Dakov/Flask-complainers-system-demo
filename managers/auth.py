@@ -24,3 +24,8 @@ class AuthManager:
 
 
 auth = HTTPTokenAuth = HTTPTokenAuth
+
+# @auth.verify_token
+# def verify_token(token):
+#     pass
+

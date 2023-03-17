@@ -1,4 +1,4 @@
-from main import db
+from db import db
 from models.enums import RoleType
 
 
@@ -15,7 +15,7 @@ class BaseUserModel(db.Model):
 class ComplainerModel(BaseUserModel):
     __tablename__ = "complainers"
     complains = db.relationship("ComplaintModel", backref="complaint", lazy="dynamic")
-    role = db.Column(db.Enum(RoleType), default=RoleType.approver, nullable=False)
+    role = db.Column(db.Enum(RoleType), default=RoleType.complainer, nullable=False)
 
 
 class ApproverModel(BaseUserModel):

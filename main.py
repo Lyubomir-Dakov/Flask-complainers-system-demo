@@ -1,20 +1,30 @@
-from decouple import config
 from flask import Flask
 from flask_migrate import Migrate
 from flask_restful import Api
-from flask_sqlalchemy import SQLAlchemy
+
+from db import db
+from resources.routes import routes
 
 app = Flask(__name__)
-api = Api(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://" \
-                                        f"{config('DB_USER')}:" \
-                                        f"{config('DB_PASSWORD')}" \
-                                        f"@localhost:{config('DB_PORT')}" \
-                                        f"/{config('DB_NAME')}"
-db = SQLAlchemy(app)
+app.config.from_object("config.DevelopmentConfig")
 
+api = Api(app)
 migrate = Migrate(app, db)
 
+
+@app.before_first_request
+def create_tables():
+    db.init_app(app)
+    db.create_all()
+
+
+@app.after_request
+def close_request(response):
+    db.session.commit()
+    return response
+
+
+[api.add_resource(*route) for route in routes]
 
 if __name__ == "__main__":
     app.run(debug=True)

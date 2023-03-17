@@ -1,6 +1,6 @@
 from sqlalchemy import func
 
-from main import db
+from db import db
 from models.enums import State
 
 
