@@ -1,5 +1,5 @@
-from schemas.bases import BaseComplainSchema
+from schemas.bases import ComplainRequestBaseSchema
 
 
-class RequestComplainSchema(BaseComplainSchema):
+class RequestComplainSchema(ComplainRequestBaseSchema):
     pass

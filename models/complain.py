@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy import func
 
 from db import db
@@ -11,9 +13,9 @@ class ComplaintModel(db.Model):
     description = db.Column(db.Text, nullable=False)
     photo_url = db.Column(db.String(255), nullable=False)
     amount = db.Column(db.Float, nullable=False)
-    create_on = db.Column(db.DateTime, server_default=func.now())
+    create_on = db.Column(db.DateTime, default=datetime.utcnow(), nullable=False)
     status = db.Column(db.Enum(State), default=State.pending, nullable=False)
-    complainer_id = db.Column(db.Integer, db.ForeignKey("complainers.id"))
+    complainer_id = db.Column(db.Integer, db.ForeignKey("complainers.id"), nullable=False)
     complainer = db.relationship("ComplainerModel")
 
 

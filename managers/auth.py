@@ -3,6 +3,10 @@ from datetime import datetime, timedelta
 import jwt
 from decouple import config
 from flask_httpauth import HTTPTokenAuth
+from jwt import DecodeError
+from werkzeug.exceptions import Unauthorized, BadRequest
+
+from models import ComplainerModel
 
 
 class AuthManager:
@@ -19,13 +23,21 @@ class AuthManager:
         try:
             info = jwt.decode(jwt=token, key=config("SECRET_KEY"), algorithms=["HS256"])
             return info["sub"], info["type"]
-        except Exception as ex:
-            raise ex
+        except DecodeError as ex:
+            raise BadRequest("Invalid or missing token")
 
 
-auth = HTTPTokenAuth = HTTPTokenAuth
+auth = HTTPTokenAuth(scheme="Bearer")
 
-# @auth.verify_token
-# def verify_token(token):
-#     pass
 
+@auth.verify_token
+def verify_token(token):
+    try:
+        user_id, type_user = AuthManager.decode_token(token)
+        user = ComplainerModel.query.filter_by(id=user_id).first()
+        # return eval(f"{type_user}.query.filter_by(id={user_id}).first()")
+        if not user:
+            raise Unauthorized("Invalid or missing token")
+        return user
+    except Exception as ex:
+        raise Unauthorized("Invalid or missing token")

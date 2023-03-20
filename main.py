@@ -11,11 +11,9 @@ app.config.from_object("config.DevelopmentConfig")
 api = Api(app)
 migrate = Migrate(app, db)
 
-
-@app.before_first_request
-def create_tables():
+with app.app_context():
     db.init_app(app)
-    db.create_all()
+
 
 
 @app.after_request
