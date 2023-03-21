@@ -27,3 +27,31 @@ class ComplaintListCreateResource(Resource):
         complain = ComplaintManager.create(data, complainer.id)
         # Use dump, not load when schema and object are not the same
         return ComplaintResponseSchema().dump(complain)
+
+
+class ComplaintResource(Resource):
+    def post(self, pk):
+        pass
+
+    def get(self, pk):
+        pass
+
+    # TODO For homework -
+    #  we have to create manager who deletes the complaint and it should return 204
+    #  (have to use BadRequest from marshmallow)
+    def delete(self,pk):
+        pass
+
+
+class ComplaintApproveResource(Resource):
+    @auth.login_required()
+    @permission_required(RoleType.approver)
+    def get(self, pk):
+        ComplaintManager.approve_complaint(pk)
+
+
+class ComplaintRejectResource(Resource):
+    @auth.login_required()
+    @permission_required(RoleType.approver)
+    def get(self, pk):
+        ComplaintManager.reject_complaint(pk)
