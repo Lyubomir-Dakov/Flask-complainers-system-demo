@@ -2,7 +2,7 @@ from werkzeug.exceptions import BadRequest
 
 from db import db
 from managers.auth import auth
-from models import ComplaintModel, ComplainerModel, RoleType, State
+from models import ComplaintModel, RoleType, State
 
 
 class ComplaintManager:
@@ -41,12 +41,14 @@ class ComplaintManager:
 
     @staticmethod
     def approve_complaint(complaint_id):
+        ComplaintManager._validate_complaint_existence(complaint_id)
         ComplaintManager._validate_status(complaint_id)
         ComplaintModel.query.filter_by(id=complaint_id).update({"status": State.approved})
         db.session.commit()
 
     @staticmethod
     def reject_complaint(complaint_id):
+        ComplaintManager._validate_complaint_existence(complaint_id)
         ComplaintManager._validate_status(complaint_id)
         ComplaintModel.query.filter_by(id=complaint_id).update({"status": State.rejected})
         db.session.commit()
@@ -54,10 +56,23 @@ class ComplaintManager:
     @staticmethod
     def _validate_status(complaint_id):
         complaint = ComplaintModel.query.filter_by(id=complaint_id).first()
-        if not complaint:
-            raise BadRequest(f"Complaint with id {complaint_id} does not exists!")
         if not complaint.status == "pending":
             raise BadRequest("You are not allowed to change the status of already processed complaints")
+
+    @staticmethod
+    def _validate_complaint_existence(complaint_id):
+        complaint = ComplaintModel.query.filter_by(id=complaint_id).first()
+        if not complaint:
+            raise BadRequest(f"Complaint with id {complaint_id} does not exists!")
+
+    @staticmethod
+    def delete_complaint(complaint_id):
+        ComplaintManager._validate_complaint_existence(complaint_id)
+        complaint = ComplaintModel.query.filter_by(id=complaint_id).first()
+        db.session.delete(complaint)
+        db.session.commit()
+        return "", 204
+
 
 role_mapper = {
     RoleType.complainer: ComplaintManager._get_complainer_complaint,

@@ -39,8 +39,10 @@ class ComplaintResource(Resource):
     # TODO For homework -
     #  we have to create manager who deletes the complaint and it should return 204
     #  (have to use BadRequest from marshmallow)
+    @auth.login_required()
+    @permission_required(RoleType.admin)
     def delete(self,pk):
-        pass
+        ComplaintManager.delete_complaint(pk)
 
 
 class ComplaintApproveResource(Resource):
