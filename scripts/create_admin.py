@@ -21,4 +21,4 @@ def create_admin(first_name, last_name, email, phone, password, iban):
 
 if __name__ == "__main__":
     # TODO Add values to be fetched from terminal
-    create_admin()
+    create_admin("Admin", "Adminov", "admin@abv.bg", "0899666888", "igrach123", "BG80BNBG96611020345678")

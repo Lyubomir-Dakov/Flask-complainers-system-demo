@@ -39,5 +39,7 @@ def verify_token(token):
         if not user:
             raise Unauthorized("Invalid or missing token")
         return user
+
+
     except Exception as ex:
         raise Unauthorized("Invalid or missing token")

@@ -17,7 +17,6 @@ class ComplaintListCreateResource(Resource):
         complaints = ComplaintManager.get_complaints()
         return ComplaintResponseSchema().dump(complaints, many=True)
 
-
     @auth.login_required
     @permission_required(RoleType.complainer)
     @validate_schema(RequestComplainSchema)
@@ -41,7 +40,7 @@ class ComplaintResource(Resource):
     #  (have to use BadRequest from marshmallow)
     @auth.login_required()
     @permission_required(RoleType.admin)
-    def delete(self,pk):
+    def delete(self, pk):
         ComplaintManager.delete_complaint(pk)
 
 
