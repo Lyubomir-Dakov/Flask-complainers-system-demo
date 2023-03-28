@@ -58,16 +58,22 @@ class WiseService:
         response = requests.post(url, json=body, headers=self.headers)
         return response.json()
 
+    def cancel_transfer(self, transfer_id):
+        url = f"{self.base_url}/v1/transfers/{transfer_id}/cancel"
+        response = requests.put(url, json={}, headers=self.headers)
+        return response.json()
 
-if __name__ == "__main__":
-    service = WiseService()
-    quote_id = service.create_quote(150)
-    recipient_account_id = service.create_recipient("Lubo Test", "BG80BNBG96611020345678")
-    custom_transaction_id = str(uuid4())
-    transfer_id = service.create_transfer(recipient_account_id, quote_id, custom_transaction_id)
-    completed_transfer = service.fund_transfer(transfer_id)
 
-    print(quote_id)
-    print(recipient_account_id)
-    print(transfer_id)
-    print(completed_transfer)
+# if __name__ == "__main__":
+#     service = WiseService()
+#     # quote_id = service.create_quote(200)
+#     # recipient_account_id = service.create_recipient("Lubo Test", "BG80BNBG96611020345678")
+#     # custom_transaction_id = str(uuid4())
+#     # transfer_id = service.create_transfer(recipient_account_id, quote_id, custom_transaction_id)
+#     # completed_transfer = service.fund_transfer(transfer_id)
+#     canceled_transfer = service.cancel_transfer(51801554)
+#
+#     # print(quote_id)
+#     # print(recipient_account_id)
+#     # print(transfer_id)
+#     # print(completed_transfer)
